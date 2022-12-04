@@ -2,6 +2,8 @@
 
 This will be a short and quick guide to getting involved with jmodev development.  For more detailed information, please look in the documentation folder for a PDF and word document copy of a more formal documentation of the code.
 
+Also, as a note, I strongly recommend you develop on Linux for this.  This is what I did, as Windows just requires too much setup to get everything to work out of the box.
+
 ## What's Going On?
 
 When developing jmodev, I used a combination of VSCode and Apache Maven.  I strongly encourage future developers to do the same.  An overview of both is below.
