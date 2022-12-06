@@ -549,7 +549,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
                     datasetIndex = -1;
                     defaultRenderer = new XYLineAndShapeRenderer(true, linespoints);
                     plot = new XYPlot(null, new NumberAxis("Aligned Value"), 
-                                        new NumberAxis("Errors"), defaultRenderer);
+                                        new LogAxis("Errors"), defaultRenderer);
                     data = new DefaultXYDataset();
                     plot.setDataset(data);
                     JFreeChart chart = new JFreeChart(plot);
@@ -838,7 +838,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
                             dataPoint = Math.abs(array1[1-a1Align][i] - array2[1-a2Align][j]);
                             break;
                         case 2:
-                            if (array2[1-a2Align][j] == 0) {
+                            if (array1[1-a1Align][i] == 0 ||array2[1-a2Align][j] == 0) {
                                 continue;
                             }
                             dataPoint = Math.abs(array1[1-a1Align][i] - array2[1-a2Align][j])/array2[1-a2Align][j];
@@ -848,7 +848,6 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
                     }
                     output[1][count] = dataPoint;
                     count++;
-                    continue;
                 }
             }
         }
