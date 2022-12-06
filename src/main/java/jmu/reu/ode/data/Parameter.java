@@ -2,7 +2,8 @@ package jmu.reu.ode.data;
 
 /**
  * An abstract class used to identify what it means to be a parameter.  This class should do 
- * anything that any parameter can do.
+ * anything that any parameter should be able to do.
+ * 
  * @author Benjamin Huber
  * @version 10/7/2022
  */

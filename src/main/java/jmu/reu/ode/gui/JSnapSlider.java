@@ -4,7 +4,7 @@ import javax.swing.JSlider;
 
 /**
  * A class that encapsulates a slider that "snaps" to its point.  This will allow us to force 
- * integer values for sliders where it would make sense.
+ * certain values for sliders where it would make sense (precision to increments of 16, etc.).
  * 
  * @author Benjamin Huber
  * @version 7/9/2022

@@ -5,6 +5,7 @@ import java.util.Iterator;
 /**
  * A class that defines a Queue with limited space.  When you add a value to the queue and it is
  * full, the queue will delete the first entry put in.  Think FIFD (First in, First deleted).
+ * 
  * @author Benjamin Huber
  * @version 7/9/2022
  */

@@ -7,6 +7,13 @@ import javax.swing.JPanel;
 
 import jmu.reu.ode.view.ODEView;
 
+/**
+ * This class allows us to create as many ChartSettingsPanels as we need in the same order and 
+ * layout as the actual ODEView.
+ * 
+ * @author Benjamin Huber
+ * @version 11/4/2022
+ */
 public class ChartSettingsViewer extends JPanel {
     public ChartSettingsViewer(ODEView parent, List<ChartSettings> cSettingsList) {
         super();

@@ -1,12 +1,5 @@
 package jmu.reu.ode.app;
-/**
- * JMU REU 2021
- *
- * GUI view for ODE solver
- *
- * @author Mike Lam, Benjamin Huber
- * @version 6/26/2022
- */
+
 
 import java.io.*;
 import java.awt.*;
@@ -19,13 +12,24 @@ import jmu.reu.ode.actions.NewODEView;
 import jmu.reu.ode.actions.ViewChartSettings;
 import jmu.reu.ode.view.ODEView;
 
+/**
+ * Our main class (the class with the main method), and our root GUI Frame that contains a 
+ * JTabbedPane for the purpose of holding multiple ODEViews.
+ *
+ * @author Mike Lam, Benjamin Huber
+ * @version 6/26/2022
+ */
 public class ODEViewer extends JFrame implements ChangeListener
 {
     // parameter info
     private JTabbedPane mainPanel;
     private CloseTab closeAction;
     private ODEView currentView;
-
+    
+    /**
+     * Default Constructor for ODEViewer.  It creates and configures a JFrame, then adds a 
+     * JTabbedPane to it, then sets itself as a listener to the JTabbedPane.  
+     */
     public ODEViewer() {
         super();
 
@@ -46,12 +50,16 @@ public class ODEViewer extends JFrame implements ChangeListener
 
     /**
      * Accessor method for the currently selected ODEView.
+     * 
      * @return the currently selected ODEView.
      */
     public ODEView getView() {
         return currentView;
     }
 
+    /**
+     * Sets up the menu buttons and assigns them to the appropriate actions.
+     */
     private void setupMenu() {
 
         JMenuBar menuBar = new JMenuBar();
@@ -79,6 +87,10 @@ public class ODEViewer extends JFrame implements ChangeListener
         menuBar.add(viewMenu);
     }
 
+    /**
+     * A nested class that defines a CloseTab action for the purpose of closing a singular tab on 
+     * in the JTabbedPane.
+     */
     public class CloseTab extends AbstractAction {
 
         public CloseTab () {
@@ -116,6 +128,10 @@ public class ODEViewer extends JFrame implements ChangeListener
         });
     }
 
+    /**
+     * Whenever our state is changed, we want to ensure we have the most recently selected panel 
+     * from the JTabbedPane.
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         currentView = (ODEView) mainPanel.getSelectedComponent();

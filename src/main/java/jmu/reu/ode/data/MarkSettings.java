@@ -1,7 +1,7 @@
 package jmu.reu.ode.data;
 
 /**
- * A class that defines Settings for drawing Marks on a chart.
+ * A class that defines Settings for a mark on a chart, a mark being a vertical or horizontal line.
  * 
  * @author Benjamin Huber
  * @version 8/14/2022

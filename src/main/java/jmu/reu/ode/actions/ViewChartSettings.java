@@ -11,7 +11,9 @@ import jmu.reu.ode.settings.ChartSettings;
 import jmu.reu.ode.settings.ChartSettingsViewer;
 
 /**
- * A class that encapsulates the action of opening a ChartSettingsPanel.
+ * A class that encapsulates the action of opening a ChartSettingsPanel.  More specifically it opens
+ * a separate frame that allows us to edit the settings of individual charts not offered to us under
+ * the built in right-click context feature of jFreeChart.
  * 
  * @author Benjamin Huber
  * @version 10/20/2022

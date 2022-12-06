@@ -17,11 +17,20 @@ public class NewODEView extends AbstractAction {
 
     private ODEViewer parent;
 
+    /**
+     * The default constructor for a NewODEView action.
+     * 
+     * @param parent a reference to the calling GUI of this action.
+     */
     public NewODEView(ODEViewer parent) {
         this.parent = parent;
         putValue(AbstractAction.NAME, "ODEView");
     }
 
+    /**
+     * Essentially, get the user to select a file and then add a new tab to the viewer whenever 
+     * this action is performed.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         File file = selectFile();
@@ -30,7 +39,7 @@ public class NewODEView extends AbstractAction {
     }
 
     /**
-     * Selects the file, returns null if the file is not found.
+     * Prompts the user to select a file, returns null if the file is not found.
      * 
      * @return the file selected, otherwise null.
      */

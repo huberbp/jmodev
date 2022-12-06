@@ -30,20 +30,32 @@ public class ChartSettingsPanel extends JPanel implements ChangeListener {
     private ButtonGroup xAxisTypeGroup;
     private ButtonGroup yAxisTypeGroup;
 
+    /**
+     * The constructor for a ChartSettingsPanel, which takes in a reference to the calling ODEView,
+     * and a chartSettings object to represent and manipulate.
+     * 
+     * @param parent the ODEView that calls this.
+     * @param chartSettings the ChartSettings object that we are allowing you to manipulate.
+     */
     public ChartSettingsPanel(ODEView parent, ChartSettings chartSettings) {
         super();
 
         this.settings = chartSettings;
         this.parent = parent;
 
+        // This will happen if you are creating "special charts" that have preset, hard-coded 
+        // settings, such as how error-charts are currently.
         if (chartSettings == null) {
             this.add(new JLabel("Settings not available for this chart"));
             return;
         }
 
+        // Create a identifying label of our x axis versus our y axis above the settings for the 
+        // respective chart.
         JLabel graphName = new JLabel(chartSettings.getXAxis().getLabel() + " vs. " + 
                                       chartSettings.getYAxis().getLabel());
         
+        // Create our xAxis settings (currently just our xAxis Type control)
         JLabel xAxisLabel = new JLabel("xAxis Type");
         JRadioButton xAxisLog = new JRadioButton("Log");
         xAxisLog.setActionCommand("x_axis_log_toggle");
@@ -53,6 +65,7 @@ public class ChartSettingsPanel extends JPanel implements ChangeListener {
         xAxisTypeGroup.add(xAxisLog);
         xAxisTypeGroup.add(xAxisNum);
         
+        // Create our yAxis settings (currently just our yAxis type control)
         JLabel yAxisLabel = new JLabel("yAxis Type");
         JRadioButton yAxisLog = new JRadioButton("Log");
         yAxisLog.setActionCommand("y_axis_log_toggle");
@@ -62,6 +75,7 @@ public class ChartSettingsPanel extends JPanel implements ChangeListener {
         yAxisTypeGroup.add(yAxisLog);
         yAxisTypeGroup.add(yAxisNum);
 
+        // Set the radio buttons to have the correct button highlighted
         if (settings.getXAxis() instanceof NumberAxis) {
             xAxisNum.setSelected(true);
         } else {
@@ -92,15 +106,22 @@ public class ChartSettingsPanel extends JPanel implements ChangeListener {
         this.add(xChoicePanel);
         this.add(yChoicePanel);
 
+        // Add this panel as a changeListener to the radio buttons
         xAxisNum.addChangeListener(this);
         xAxisLog.addChangeListener(this);
 
         yAxisNum.addChangeListener(this);
         yAxisLog.addChangeListener(this);
         
+        // Create borders so that its obvious which settings go to which graph.
         this.setBorder(BorderFactory.createLineBorder(Color.gray));
     }
 
+    /**
+     * This is a little more complicated then it seems, the appropriate settings get updated when
+     * the appropriate buttons get pushed, but also we hard-call our ODEView parent's 
+     * actionPerformed method to force it to refresh to reflect the settings change.
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         String xActionCommand = xAxisTypeGroup.getSelection().getActionCommand();

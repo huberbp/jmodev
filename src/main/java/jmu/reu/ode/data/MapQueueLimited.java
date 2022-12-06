@@ -1,6 +1,7 @@
 package jmu.reu.ode.data;
 /**
  * A class that implements a Map that contains a Key, LimitedQueue pair.
+ * 
  * @author Benjamin Huber
  * @version 7/9/2022
  */

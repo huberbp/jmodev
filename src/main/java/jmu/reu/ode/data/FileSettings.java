@@ -1,7 +1,7 @@
 package jmu.reu.ode.data;
 
 /**
- * A class that defines the settings pertaining to how to use a file.
+ * A class that defines the settings pertaining to how our Parser should read a file.
  * 
  * @author Benjamin Huber
  * @version 8/17/2022

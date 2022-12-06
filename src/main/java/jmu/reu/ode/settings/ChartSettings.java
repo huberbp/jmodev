@@ -4,7 +4,9 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.data.Range;
 
 /**
- * A class that encapsulates all of the "chart level settings" that we need to keep around.
+ * A class that encapsulates all of the "chart level settings" that we need to keep around.  For 
+ * jfreechart, this includes our actual Axis objects, our Ranges, and whether we should use 
+ * auto ranges or manual ranges.
  * 
  * @author Benjamin Huber
  * @version 7/20/2022

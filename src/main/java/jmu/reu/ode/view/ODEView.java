@@ -1,13 +1,6 @@
 
 package jmu.reu.ode.view;
-/**
- * JMU REU 2022
- * 
- * Container for the data needed to represent a singular view of an ODE.
- * 
- * @author Mike Lam, Benjamin Huber
- * @version 10/20/2022
- */
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -67,7 +60,21 @@ import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 
-
+/**
+ * This is the most complicated class, and it does the most.  In the future I think someone should 
+ * pull out the parsing elements and make this class purely a GUI display, and define some sort of 
+ * Parser interface to allow multiple different types of Parers and quick changes between them.
+ * 
+ * Ultimately this class is responsible for creating the entire ODEView Panel, for updating graphs 
+ * when our parameters change, and for Parsing the data from the file initially and whenever we 
+ * need to update our numbers.
+ * 
+ * As a warning, this file is really hard to understand without a concrete .cfg file example.  If 
+ * you do not have one already, please ask Professor Lam for one to cross reference.
+ * 
+ * @author Mike Lam, Benjamin Huber
+ * @version 12/4/2022
+ */
 public class ODEView extends JPanel implements ChangeListener, DocumentListener, ActionListener {
     private final double PARAM_FACTOR = 100.0;
     private boolean updating = false;
@@ -91,6 +98,11 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
 
     private boolean linespoints = false;
 
+    /**
+     * Create an ODEView object, which looks through a config file and splits it into separate 
+     * relevant scripts before processing those scripts in an appropriate order.
+     * @param configFile the config file we are parsing.
+     */
     public ODEView (File configFile) {
         // List of all the image filenames that appear in the file.
         description = new JLabel();
@@ -108,6 +120,8 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
         profiles = new HashMap<>();
         BufferedReader file;
         String line = "";
+
+        // Read in the .cfg file
         try {
             file = new BufferedReader(new FileReader(configFile));
             line = file.readLine();
@@ -166,6 +180,8 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
             System.err.println("Invalid parameter: " + line);
         }
 
+        // The setscript contains overall directives to the parser that pertain to the overall 
+        // runtime of it.
         for (String setLine : setScript) {
             String[] args = setLine.split(" +");
             switch (args[0]) {
