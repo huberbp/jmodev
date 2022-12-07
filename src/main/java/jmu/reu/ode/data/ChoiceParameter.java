@@ -15,7 +15,6 @@ public class ChoiceParameter extends Parameter {
         options = new String[choices.length];
         for (int i = 0; i < choices.length; i++) {
             options[i] = choices[i];
-            i++;
         }
         selected = options[0];
     }
