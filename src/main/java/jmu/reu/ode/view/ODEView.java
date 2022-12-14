@@ -101,10 +101,11 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
     /**
      * Create an ODEView object, which looks through a config file and splits it into separate 
      * relevant scripts before processing those scripts in an appropriate order.
+     * 
      * @param configFile the config file we are parsing.
      */
     public ODEView (File configFile) {
-        // List of all the image filenames that appear in the file.
+        // Create all the different data structures needed for our ODEView.
         description = new JLabel();
         parameters = new TreeMap<String, Parameter>();
         List<Parameter> orderedParameters = new ArrayList<Parameter>();
@@ -121,7 +122,8 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
         BufferedReader file;
         String line = "";
 
-        // Read in the .cfg file
+        // Read in the .cfg file, splitting the scripts into appropriate categories and processing
+        // some of the most basic ones.
         try {
             file = new BufferedReader(new FileReader(configFile));
             line = file.readLine();
@@ -181,7 +183,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
         }
 
         // The setscript contains overall directives to the parser that pertain to the overall 
-        // runtime of it.
+        // runtime of the app.
         for (String setLine : setScript) {
             String[] args = setLine.split(" +");
             switch (args[0]) {
@@ -200,7 +202,8 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
             }
         }
 
-        // handle file aliasing
+        // The fileList script handles the aliasing of files and storing the information about how
+        // we are using them.
         for (String fileLine : fileList) {
             // List<String> matchList = new ArrayList<String>();
             // Pattern regex = Pattern.compile("([");
@@ -228,7 +231,9 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
             fileMap.put(args[1], fileSettings);
         }
 
-        // handle profiling
+        // The profile script sets up our profile data in our profiles map data structure.  This 
+        // will allow us to assign the appropriate series and marks to the appropriate line profiles
+        // later on.
         for (String profileLine : profileScript) {
             String[] args = profileLine.split(" +");
             LineProfile profile = new LineProfile();
@@ -274,14 +279,16 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
 
         // image panel consists of just a single label
         JPanel imagePanel = new JPanel();
-        // Get size of grid, should be refined later to a more reasonable approach
+        // We set the size of our GridLayout to be n by n.  Essentially our grid layout is a square,
+        // so we want everything to fit on the smallest Grid possible.  If we have 4 plots, we will 
+        // do a 2x2 grid.  If we have 5, we will do a 3x3.
         int n = (int)(Math.sqrt((double)chartNum)+0.5);
 
         // set grid size
         imagePanel.setLayout(new GridLayout(n, n, 2, 2));
         charts = new ArrayList<ChartPanel>();
 
-        // instantiate our JLabels and add them to the imagePanel
+        // This sets up chartNum empty ChartPanels for mounting JFreeCharts to.
         for (int i = 0; i < chartNum; i++) {
             charts.add(new ChartPanel(null));
             charts.get(i).setVisible(true);
@@ -289,13 +296,18 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
         }
         imagePanel.setVisible(true);
 
-        // Setup charts & series settings one time at the beginning
+        // Currently, we rebuild the chart every time in JFreeChart, but the data specified in the 
+        // config file isn't read more than once.  This takes all of that data and stores it into 
+        // data structures that allow us to readily build charts according to the .cfg files' 
+        // specifications.
         ChartSettings chartSettings;
         int notitleCount = 0;
         for (String plotLine : plotScript) {
             // a "plot" level command
             
             if (plotLine.startsWith("error ")) {
+                // Currently this ChartSettings object isn't consulted when actually constructing 
+                // the error plot. It should be changed later.
                 cSettingsList.add(new ChartSettings());
             }
             else if (plotLine.startsWith("plot ")) {
@@ -424,7 +436,8 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
             }
         }
 
-        // slider panel consists of a stack of labels and sliders
+        // This sets up the JSliders at the bottom of the GUI, which we use to adjust the parameters
+        // that get used by our solver to generate the data we are plotting.
         JPanel sliderPanel = new JPanel();
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.PAGE_AXIS));
         sliderPanel.add(description);
@@ -486,7 +499,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
             }
         }
 
-        // main window consists of image panel and slider panel
+        // Generic GUI Setup
         Container cp = this;
         cp.setLayout(new BorderLayout());
         cp.add(imagePanel, BorderLayout.CENTER);
@@ -495,6 +508,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
         setSize(700, 700);
         setVisible(true);
 
+        // Call updatePlot once to initially draw the plot
         updatePlot();
     }
 
@@ -509,8 +523,13 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
 
     public void updatePlot()
     {
+
+        // The try was initially here to prevent the charts from crashing our app on invalid ranges,
+        // eventually this stopped being a problem, but it is more convenient to test if your code 
+        // does not stop running due to a error putting the data on the plot.
         try {
-            // run all commands
+            // This will run our "run" script on the command line.  It does this every time the 
+            // updatePlot method is called with the new parameter values supplied from the sliders.
             for (String cmd : commands) {
                 // cmd = cmd.replaceAll("./", configFileLocation + "/");
                 for (Parameter p : parameters.values()) {
@@ -532,8 +551,9 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
                 reader.close();
             }
 
-            // parse through the plot and series commands
-            // necessary data for plot-level commands
+            
+            // This complicated loop builds our charts.  I'd recommend tracing through it with the 
+            // example .cfg file to truly understand it.
             ChartSettings chartSettings;
             XYPlot plot = null;
             XYLineAndShapeRenderer defaultRenderer = null;
@@ -746,7 +766,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
 
     /**
      * A helper method that takes a list of Strings and 2 integers, each 
-     * representing what columns of data will represent x and y, and puts them
+     * representing what columns of data that will represent x and y, and puts them
      * into a 2D array for use with the DefaultXYDataset.
      * 
      * @param lines your String lines
@@ -806,6 +826,24 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
         return new DataAnalytics(shortenedData);
     }
 
+    /**
+     * A complicated method we use to generate our error.  It consults a private method matchCull to
+     * do the culling, but essentially it takes in 2 file arguments, looks at both of the specified 
+     * xColumns for those files, and if the data matches, it stores the x and y values in our array,
+     * otherwise it keeps looking.  In order for this method to work when plotting error our x axis 
+     * data needs to be monotonically increasing.
+     * 
+     * @param file1 the first file
+     * @param xCol1 the column for the xdata of the first file
+     * @param yCol1 the column for the ydata of the first file
+     * @param file2 the second file
+     * @param xCol2 the column for the xdata of the second file
+     * @param yCol2 the column for the ydata of the second file
+     * @param a1Align should x or y column be used for alignment from file 1
+     * @param a2Align should x or y column be used for alignment from file 2
+     * @param code whether the error should be absolute error, difference error, or relative error
+     * @return our double array.
+     */
     private double[][] loadError(File file1, int xCol1, int yCol1, 
                                                 File file2, int xCol2, int yCol2, int a1Align, int a2Align, int code) {
         ArrayList<String> file1Lines = loadData(file1, 1);
@@ -864,6 +902,7 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
     /**
      * Helper method to load data from a file.
      * @param file the file to load data from
+     * @param fileSkip the number of lines to skip reading in between reads.
      * @return the lines of the file as an arrayList
      */
     private ArrayList<String> loadData(File file, int fileSkip) {
