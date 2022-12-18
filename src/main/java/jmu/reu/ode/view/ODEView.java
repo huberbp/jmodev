@@ -333,6 +333,15 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
                         break;
                     case "log":
                         chartSettings.setXAxis(new LogAxis(args[4]));
+                        // TODO: de-dup with above
+                        if (!args[3].equals("[::]")) {
+                            String rangeValues = args[3].substring(1, args[3].length() - 1);
+                            String[] rangeValuesList = rangeValues.split(":");
+                            double lowerBound = Double.parseDouble(rangeValuesList[0]);
+                            double upperBound = Double.parseDouble(rangeValuesList[2]);
+                            chartSettings.setXRange(new Range(lowerBound, upperBound));
+                            chartSettings.setAutoXRange(false);
+                        }
                         break;
                     default:
                         throw new InvalidConfigFormatException("Invalid xaxis types specified");
@@ -351,6 +360,15 @@ public class ODEView extends JPanel implements ChangeListener, DocumentListener,
                         break;
                     case "log":
                         chartSettings.setYAxis(new LogAxis(args[8]));
+                        // TODO: de-dup with above
+                        if (!args[7].equals("[::]")) {
+                            String rangeValues = args[7].substring(1, args[7].length() - 1);
+                            String[] rangeValuesList = rangeValues.split(":");
+                            double lowerBound = Double.parseDouble(rangeValuesList[0]);
+                            double upperBound = Double.parseDouble(rangeValuesList[2]);
+                            chartSettings.setYRange(new Range(lowerBound, upperBound));
+                            chartSettings.setAutoYRange(false);
+                        }
                         break;
                     default:
                         throw new InvalidConfigFormatException("Invalid yaxis types specified");
